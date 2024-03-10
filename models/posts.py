@@ -2,6 +2,7 @@ import uuid
 from sqlalchemy import Column, String, UUID, Text, ForeignKey
 from sqlalchemy.orm import Relationship
 from base import TimeStamp
+from relationships import post_likes
 
 
 class Post(TimeStamp):
@@ -15,6 +16,8 @@ class Post(TimeStamp):
     group_id = Column(UUID, ForeignKey("groups.id", ondelete="CASCADE"))
 
     comments = Relationship("Comment", backref="post")
+
+    likes = Relationship("User", secondary=post_likes, backref="related_likes")
 
     def __str__(self):
         return f"{self.title}"

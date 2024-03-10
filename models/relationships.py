@@ -14,3 +14,10 @@ mod_users = Table(
     Column("group_id", UUID, ForeignKey("groups.id"), primary_key=True),
     Column("user_id", UUID, ForeignKey("users.id"), primary_key=True)
 )
+
+post_likes = Table(
+    "post_likes",
+    Base.metadata,
+    Column("post_id", UUID, ForeignKey("posts.id"), primary_key=True),
+    Column("user_id", UUID, ForeignKey("users.id"), primary_key=True)
+)
