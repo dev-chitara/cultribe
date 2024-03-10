@@ -17,7 +17,9 @@ class User(Base):
     state = Column(String(80), nullable=False)
     country = Column(String(80), nullable=False)
 
-    owner = Relationship("Group", backref="users")
+    comments = Relationship("Comment", backref="user")
+    posts = Relationship("Post", backref="user")
+    groups = Relationship("Group", backref="user")
 
     def __str__(self):
         return f"{self.name}"

@@ -8,8 +8,8 @@ member_users = Table(
     Column("user_id", UUID, ForeignKey("users.id"), primary_key=True)
 )
 
-mods_users = Table(
-    "mods_users",
+mod_users = Table(
+    "mod_users",
     Base.metadata,
     Column("group_id", UUID, ForeignKey("groups.id"), primary_key=True),
     Column("user_id", UUID, ForeignKey("users.id"), primary_key=True)

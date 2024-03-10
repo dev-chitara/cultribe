@@ -1,5 +1,6 @@
 import uuid
 from sqlalchemy import Column, String, UUID, Text, ForeignKey
+from sqlalchemy.orm import Relationship
 from base import TimeStamp
 
 
@@ -10,6 +11,10 @@ class Post(TimeStamp):
     title = Column(String(80), nullable=False)
     content = Column(Text, nullable=False)
     image = Column(String(80), nullable=False)
+    owner_id = Column(UUID, ForeignKey("users.id", ondelete="CASCADE"))
+    group_id = Column(UUID, ForeignKey("groups.id", ondelete="CASCADE"))
+
+    comments = Relationship("Comment", backref="post")
 
     def __str__(self):
         return f"{self.title}"
