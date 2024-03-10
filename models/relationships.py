@@ -1,5 +1,4 @@
 from sqlalchemy import Column, UUID, ForeignKey, Table
-from sqlalchemy.orm import relationship
 from db_setup import Base
 
 member_users = Table(
