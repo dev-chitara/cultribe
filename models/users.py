@@ -1,5 +1,6 @@
 import uuid
 from sqlalchemy import Column, String, UUID, Integer, Text
+from sqlalchemy.orm import Relationship
 from db_setup import Base
 
 
@@ -15,6 +16,8 @@ class User(Base):
     city = Column(String(80), nullable=False)
     state = Column(String(80), nullable=False)
     country = Column(String(80), nullable=False)
+
+    owner = Relationship("Group", backref="users")
 
     def __str__(self):
         return f"{self.name}"
