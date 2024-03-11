@@ -15,7 +15,7 @@ class CreatePostSchema(BasePostSchema):
     pass 
 
 
-class UpdatePstSchema(BasePostSchema):
+class UpdatePostSchema(BasePostSchema):
     title: str | None=None
     content: str | None=None
     image: str | None=None
