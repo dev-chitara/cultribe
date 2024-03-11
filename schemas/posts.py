@@ -19,6 +19,8 @@ class UpdatePostSchema(BasePostSchema):
     title: str | None=None
     content: str | None=None
     image: str | None=None
+    owner_id: UUID | None=None
+    group_id: UUID | None
 
 
 class GetPostSchema(BasePostSchema):

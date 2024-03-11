@@ -15,6 +15,8 @@ class CreateCommentSchema(BaseCommentSchema):
 
 class UpdateCommentSchema(BaseCommentSchema):
     content: str | None=None
+    owner_id: UUID | None=None
+    group_id: UUID | None=None
 
 
 class GetCommentSchema(BaseCommentSchema):

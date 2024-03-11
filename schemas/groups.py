@@ -16,6 +16,7 @@ class CreateGroupSchema(BaseGroupSchema):
 class UpdateGroupSchema(BaseGroupSchema):
     name: str | None=None
     description: str | None=None
+    owner_id: UUID | None=None
 
 
 class GetGroupSchema(BaseGroupSchema):
