@@ -1,5 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
+from routers import users
+from routers import posts
+from routers import groups
+from routers import comments
 
 
 app = FastAPI(
@@ -11,6 +15,11 @@ app = FastAPI(
     }
 )
 
+
+app.include_router(users.router, prefix="/api")
+app.include_router(posts.router, prefix="/api")
+app.include_router(groups.router, prefix="/api")
+app.include_router(comments.router, prefix="/api")
 
 
 if __name__ == "__main__":
