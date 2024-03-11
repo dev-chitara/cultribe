@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy import Column, String, UUID, Text, ForeignKey
 from sqlalchemy.orm import Relationship
-from base import TimeStamp
+from models.base import TimeStamp
 from relationships import post_likes
 
 

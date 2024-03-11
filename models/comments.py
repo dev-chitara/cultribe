@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy import Column, UUID, Text, ForeignKey
-from base import TimeStamp
+from models.base import TimeStamp
 
 class Comment(TimeStamp):
     __tablename__ = "comments"
