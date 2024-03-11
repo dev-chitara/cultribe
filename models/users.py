@@ -10,7 +10,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_name = Column(String(80), nullable=False)
     name = Column(String(80), nullable=False)
-    phone = Column(Integer(10), nullable=False)
+    phone = Column(Integer, nullable=False)
     bio = Column(Text, nullable=False)
     image = Column(String(80), nullable=False)
     city = Column(String(80), nullable=False)
