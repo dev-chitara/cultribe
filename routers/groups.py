@@ -59,23 +59,5 @@ async def delete_group(group_id, db: Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Group not found!"})
     
     db.delete(group_object)
-    return group_object
-
-
-@router.patch("/groups/{group_id}", status_code=status.HTTP_200_OK, response_model=GetGroupSchema)
-async def update_group(group_id: UUID, group_data: UpdateGroupSchema, db: Session=Depends(get_db)):
-    update_group_data = group_data.model_dump()
-
-    group_query = db.query(Group).filter(Group.id == group_id)
-    group_object = group_query.first()
-
-    if group_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Group not found!"})
-    
-    group_query.update(update_group_data)
-    db.refresh(group_object)
-    db.commit
-    db.commit()
     return {"Deleted": True}
-
     
