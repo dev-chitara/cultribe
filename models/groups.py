@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, String, UUID, Text, ForeignKey
 from sqlalchemy.orm import Relationship
 from models.base import TimeStamp
-from relationships import member_users, mod_users
+from models.relationships import member_users, mod_users
 
 
 class Group(TimeStamp):

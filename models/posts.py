@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, String, UUID, Text, ForeignKey
 from sqlalchemy.orm import Relationship
 from models.base import TimeStamp
-from relationships import post_likes
+from models.relationships import post_likes
 
 
 class Post(TimeStamp):
