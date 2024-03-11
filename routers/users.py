@@ -16,12 +16,12 @@ async def fetch_users(db: Session=Depends(get_db)):
     return user_objects
 
 
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=GetUserSchema)
+@router.post("/users", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 async def create_users(user_data: CreateUserSchema, db: Session=Depends(get_db)):
     user_object = User(**user_data.model_dump())
     db.add(user_object)
-    db.refresh(user_object)
     db.commit()
+    db.refresh(user_object)
     return user_object
 
 
@@ -37,7 +37,7 @@ async def get_user(user_id: UUID, db: Session=Depends(get_db)):
 
 @router.patch("/users/{user_id}", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 async def update_user(user_id: UUID, user_data: UpdateUserSchema, db: Session=Depends(get_db)):
-    update_user_data = user_data.model_dump()
+    update_user_data = user_data.model_dump(exclude_none=True)
 
     user_query = db.query(User).filter(User.id == user_id)
     user_object = user_query.first()
@@ -46,8 +46,8 @@ async def update_user(user_id: UUID, user_data: UpdateUserSchema, db: Session=De
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "User not found!"})
     
     user_query.update(update_user_data)
-    db.refresh(user_object)
     db.commit()
+    db.refresh(user_object)
     return user_object
 
 
