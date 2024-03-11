@@ -51,7 +51,7 @@ async def update_post(post_id: UUID, post_data:UpdatePostSchema, db: Session=Dep
     return post_object
 
 
-@router.delete("/posts.{post_id}", status_code=status.HTTP_200_OK)
+@router.delete("/posts/{post_id}", status_code=status.HTTP_200_OK)
 async def delete_post(post_id: UUID, db: Session=Depends(get_db)):
     post_object = db.query(Post).filter(Post.id == post_id).first()
 
