@@ -22,7 +22,7 @@ class UpdateCommentSchema(BaseCommentSchema):
 class GetCommentSchema(BaseCommentSchema):
     id: UUID
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None=None
 
 
     class Config:
