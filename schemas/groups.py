@@ -22,7 +22,7 @@ class UpdateGroupSchema(BaseGroupSchema):
 class GetGroupSchema(BaseGroupSchema):
     id: UUID
     created_at: datetime
-    updated_at: datetime | None=None
+    updated_at: datetime | None = None
 
 
     class Config:

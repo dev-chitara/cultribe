@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 class BaseCommentSchema(BaseModel):
     content: str
-    owner_id: UUID
-    post_id: UUID
+    owner_id: UUID | None=None
+    post_id: UUID | None=None
 
 
 class CreateCommentSchema(BaseCommentSchema):

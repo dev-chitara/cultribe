@@ -10,7 +10,7 @@ from db_setup import get_db
 router = APIRouter(tags=["Comment API"])
 
 
-@router.get("/comments", status_code=status.HTTP_200_OK, response_model=List[GetCommentSchema])
+@router.get("/comments", status_code=status.HTTP_200_OK)
 async def fetch_commments(db: Session=Depends(get_db)):
     comment_object = db.query(Comment).all()
     return comment_object
