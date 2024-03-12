@@ -20,7 +20,7 @@ class UpdatePostSchema(BasePostSchema):
     content: str | None=None
     image: str | None=None
     owner_id: UUID | None=None
-    group_id: UUID | None
+    group_id: UUID | None=None
 
 
 class GetPostSchema(BasePostSchema):
