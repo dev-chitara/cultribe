@@ -17,7 +17,7 @@ auth = Auth()
 
 
 @router.get("/users", status_code=status.HTTP_200_OK, response_model=List[GetUserSchema])
-async def fetch_users(db: Session=Depends(get_db)):
+async def fetch_users(db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
     user_objects = db.query(User).all()
     return user_objects
 
@@ -26,7 +26,6 @@ async def fetch_users(db: Session=Depends(get_db)):
 @router.get("/users/me", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 @router.get("/users/{user_id}", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 async def get_user(user_id: str, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
-    
     uid = user_id if user_id != "me" else user_object.id
     user_object = db.query(User).filter(User.id == uid).first()
 
@@ -40,13 +39,7 @@ async def get_user(user_id: str, db: Session=Depends(get_db), user_object: str =
 
 
 @router.patch("/users/{user_id}", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
-async def update_user(user_id: str, user_data: UpdateUserSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
-    if user_object.id != user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"message": "user does not exist!"}
-        )
-    
+async def update_user(user_id: UUID, user_data: UpdateUserSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
     update_user_data = user_data.model_dump(exclude_none=True)
 
     user_query = db.query(User).filter(User.id == user_id)
@@ -65,7 +58,7 @@ async def update_user(user_id: str, user_data: UpdateUserSchema, db: Session=Dep
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
-async def delete_user(user_id: UUID, db: Session=Depends(get_db)):
+async def delete_user(user_id: UUID, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
     user_object = db.query(User).filter(User.id == user_id).first()
 
     if user_object is None:
