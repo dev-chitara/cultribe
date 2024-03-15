@@ -2,6 +2,12 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
+class CustomOAuth2PasswordRequestForm(BaseModel):
+    username: str
+    password: str
+    json_body: dict
+
+
 class TokenSchema(BaseModel):
     access_token: str
     refresh_token: str

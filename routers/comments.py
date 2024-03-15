@@ -30,7 +30,10 @@ async def get_comment(comment_id: UUID, db: Session=Depends(get_db)):
     comment_object = db.query(Comment).filter(Comment.id == comment_id).first()
 
     if comment_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Comment not found!"})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Comment not found!"}
+        )
     
     return comment_object
 
@@ -43,7 +46,10 @@ async def update_comment(comment_id: UUID, comment_data: UpdateCommentSchema, db
     comment_object = comment_query.first()
 
     if comment_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Comment not found!"})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Comment not found!"}
+        )
     
     comment_query.update(upadte_comment_data)
     db.commit()
@@ -56,7 +62,10 @@ async def delete_comment(comment_id: UUID, db: Session=Depends(get_db)):
     comment_object = db.query(Comment).filter(Comment.id == comment_id).first()
 
     if comment_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Comment not found!"})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Comment not found!"}
+        )
     
     db.delete(comment_object)
     db.commit()

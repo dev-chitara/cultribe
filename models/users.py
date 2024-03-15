@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, UUID, Integer, Text
+from sqlalchemy import Column, String, UUID, Text
 from sqlalchemy.orm import Relationship
 from db_setup import Base
 
@@ -8,9 +8,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_name = Column(String(80), nullable=False)
+    user_name = Column(String(80), unique=True, nullable=False)
     name = Column(String(80), nullable=False)
-    phone = Column(Integer, nullable=False)
+    phone = Column(String(80), nullable=False)
+    password = Column(String(80), nullable=False)
     bio = Column(Text, nullable=False)
     image = Column(String(80), nullable=False)
     city = Column(String(80), nullable=False)

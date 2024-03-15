@@ -30,7 +30,10 @@ async def get_post(post_id: UUID, db: Session=Depends(get_db)):
     post_object = db.query(Post).filter(Post.id == post_id).first()
 
     if post_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Post not found!"}) 
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Post not found!"}
+        ) 
 
     return post_object 
 
@@ -43,7 +46,10 @@ async def update_post(post_id: UUID, post_data:UpdatePostSchema, db: Session=Dep
     post_object = post_query.first()
 
     if post_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Post not found!"})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Post not found!"}
+        )
     
     post_query.update(update_post_data)
     db.commit()
@@ -56,7 +62,10 @@ async def delete_post(post_id: UUID, db: Session=Depends(get_db)):
     post_object = db.query(Post).filter(Post.id == post_id).first()
 
     if post_object is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"message": "Post not found!"})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail={"message": "Post not found!"}
+        )
 
     db.delete(post_object)
     db.commit()

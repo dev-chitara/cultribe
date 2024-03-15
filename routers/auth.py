@@ -1,10 +1,13 @@
-from fastapi import HTTPException, status, APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException, status, APIRouter, Depends, Request
 from sqlalchemy.orm import Session
+
 from common.utils import hash_pass, verify_password
-from common.auth import Auth
+from common.auth import Auth, parse_json_body
 from models.users import User
+from schemas.users import CreateUserSchema
+from schemas.auth import CustomOAuth2PasswordRequestForm
 from db_setup import get_db
+
 
 router = APIRouter(
     tags=["Authentication"]
@@ -12,18 +15,46 @@ router = APIRouter(
 
 auth = Auth()
 
-@router.post("/login")
-async def login(user_details: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user_object = db.query(User).filter(User.user_name == user_details.username).first()
+
+@router.post("/signup", status_code=status.HTTP_200_OK)
+async def registration(signup_data: CreateUserSchema, db: Session=Depends(get_db)):
+    user_data = signup_data.model_dump()
+
+    # To check if user exist or not
+    
+    
+
+    password = user_data.pop("password")
+
+    user_object = User(password=hash_pass(password), **user_data)
+    
+    db.add(user_object)
+    db.commit()
+    db.refresh(user_object)
+    
+    return user_object
+
+
+
+@router.post("/login", status_code=status.HTTP_200_OK)
+async def login(login_data: CustomOAuth2PasswordRequestForm = Depends(parse_json_body), db: Session = Depends(get_db)):
+    user_object = db.query(User).filter(User.user_name == login_data.username).first()
 
     if not user_object:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
-        detail={"message": "The user does not exist!"})
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail={"message": "user does not exist!"}
+        )
     
-    if not verify_password(user_details.password, user_object.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
-        detail={"message": "The passwords do not match"})
+    if not verify_password(login_data.password, user_object.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail={"message": "password does not match"}
+        )
     
     access_token = auth.create_access_token(subject=user_object.id)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer"
+    }

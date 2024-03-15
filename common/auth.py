@@ -2,13 +2,13 @@ from datetime import timedelta, datetime
 from pydantic import ValidationError
 from typing import Union, Any
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, ExpiredSignatureError, JWTError
 from sqlalchemy.orm import Session
 
 from db_setup import get_db
-from schemas.auth import TokenPayload
+from schemas.auth import CustomOAuth2PasswordRequestForm, TokenPayload
 from models.users import User
 
 
@@ -18,13 +18,18 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 3
 
 
+async def parse_json_body(request: Request):
+    json_body = await request.json()
+    return CustomOAuth2PasswordRequestForm(**json_body, json_body=json_body)
+
+
 class Auth:
 
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+    oauth2_scheme =  OAuth2PasswordBearer(tokenUrl="/login", scheme_name="JWT")
 
 
     def encode_token(self, payload):
-        return jwt.encode(payload, SECRET_KEY, algorithms=[ALGORITHM])
+        return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     
 
     def decode_token(self, token):
@@ -71,3 +76,4 @@ class Auth:
             )
 
         return user
+    

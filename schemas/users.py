@@ -5,7 +5,8 @@ from pydantic import BaseModel
 class BaseUserSchema(BaseModel):
     user_name: str
     name: str
-    phone: int
+    phone: str
+    password: str
     bio: str
     image: str
     city: str
@@ -20,7 +21,8 @@ class CreateUserSchema(BaseUserSchema):
 class UpdateUserSchema(BaseUserSchema):
     user_name: str | None=None
     name: str | None=None
-    phone: int | None=None
+    phone: str | None=None
+    password: str | None=None
     bio: str | None=None
     image: str | None=None
     city: str | None=None
