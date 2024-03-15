@@ -15,12 +15,18 @@ auth = Auth()
 
 @router.get("/posts", status_code=status.HTTP_200_OK, response_model=List[GetPostSchema])
 async def fetch_posts(db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
-    post_objects = db.query(Post).all()
+    post_objects = db.query(Post).filter(Post.owner_id == user_object.id).all()
     return post_objects
 
 
 @router.post("/posts", status_code=status.HTTP_201_CREATED, response_model=GetPostSchema)
 async def create_posts(post_data: CreatePostSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
+    if post_data.owner_id != user_object.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Not authenticated"}
+        )
+    
     post_object = Post(**post_data.model_dump())
     db.add(post_object)
     db.commit()
