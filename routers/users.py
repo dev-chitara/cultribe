@@ -6,7 +6,7 @@ from fastapi import HTTPException, status, APIRouter, Depends
 
 from models.users import User
 from schemas.users import UpdateUserSchema, GetUserSchema
-from common.auth import Auth
+from common.auth import Auth, parse_json_body
 from db_setup import get_db
 
 
@@ -41,13 +41,13 @@ async def get_user(user_id: str, db: Session=Depends(get_db), user_object: str =
 
 @router.patch("/users/{user_id}", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 async def update_user(user_id: str, user_data: UpdateUserSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
-    update_user_data = user_data.model_dump(exclude_none=True)
-
     if user_object.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"message": "User does not exist!"}
+            detail={"message": "user does not exist!"}
         )
+    
+    update_user_data = user_data.model_dump(exclude_none=True)
 
     user_query = db.query(User).filter(User.id == user_id)
     user_object = user_query.first()

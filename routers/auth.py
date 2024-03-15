@@ -21,7 +21,7 @@ async def registration(signup_data: CreateUserSchema, db: Session=Depends(get_db
     user_data = signup_data.model_dump()
 
     # To check if user exist or not
-    
+
     
 
     password = user_data.pop("password")
@@ -38,7 +38,7 @@ async def registration(signup_data: CreateUserSchema, db: Session=Depends(get_db
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(login_data: CustomOAuth2PasswordRequestForm = Depends(parse_json_body), db: Session = Depends(get_db)):
-    user_object = db.query(User).filter(User.user_name == login_data.username).first()
+    user_object = db.query(User).filter(User.username == login_data.username).first()
 
     if not user_object:
         raise HTTPException(

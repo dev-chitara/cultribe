@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class BaseUserSchema(BaseModel):
-    user_name: str
+    username: str
     name: str
     phone: str
     password: str
@@ -19,7 +19,7 @@ class CreateUserSchema(BaseUserSchema):
 
 
 class UpdateUserSchema(BaseUserSchema):
-    user_name: str | None=None
+    username: str | None=None
     name: str | None=None
     phone: str | None=None
     password: str | None=None
