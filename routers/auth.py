@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, APIRouter, Depends, Request
+from fastapi import HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from common.utils import hash_pass, verify_password
@@ -36,7 +36,6 @@ async def registration(signup_data: CreateUserSchema, db: Session=Depends(get_db
     db.refresh(user_object)
     
     return user_object
-
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)

@@ -49,6 +49,12 @@ async def get_post(post_id: UUID, db: Session=Depends(get_db), user_object: str 
 
 @router.patch("/posts/{post_id}", status_code=status.HTTP_200_OK, response_model=GetPostSchema)
 async def update_post(post_id: UUID, post_data:UpdatePostSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
+    if post_data.owner_id != user_object.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Not authenticated"}
+        )
+    
     update_post_data = post_data.model_dump(exclude_none=True)
 
     post_query = db.query(Post).filter(Post.id == post_id)
@@ -69,6 +75,12 @@ async def update_post(post_id: UUID, post_data:UpdatePostSchema, db: Session=Dep
 @router.delete("/posts/{post_id}", status_code=status.HTTP_200_OK)
 async def delete_post(post_id: UUID, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
     post_object = db.query(Post).filter(Post.id == post_id).first()
+
+    if post_object.owner_id != user_object.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Not authenticated"}
+        )
 
     if post_object is None:
         raise HTTPException(

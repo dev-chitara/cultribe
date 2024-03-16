@@ -6,7 +6,7 @@ from fastapi import HTTPException, status, APIRouter, Depends
 
 from models.users import User
 from schemas.users import UpdateUserSchema, GetUserSchema
-from common.auth import Auth, parse_json_body
+from common.auth import Auth
 from db_setup import get_db
 
 
@@ -20,7 +20,6 @@ auth = Auth()
 async def fetch_users(db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
     user_objects = db.query(User).all()
     return user_objects
-
 
 
 @router.get("/users/me", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
@@ -40,6 +39,12 @@ async def get_user(user_id: str, db: Session=Depends(get_db), user_object: str =
 
 @router.patch("/users/{user_id}", status_code=status.HTTP_200_OK, response_model=GetUserSchema)
 async def update_user(user_id: UUID, user_data: UpdateUserSchema, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
+    if user_id != user_object.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Not authenticated"}
+        )
+    
     update_user_data = user_data.model_dump(exclude_none=True)
 
     user_query = db.query(User).filter(User.id == user_id)
@@ -59,6 +64,12 @@ async def update_user(user_id: UUID, user_data: UpdateUserSchema, db: Session=De
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_200_OK)
 async def delete_user(user_id: UUID, db: Session=Depends(get_db), user_object: str = Depends(auth.get_current_user)):
+    if user_id != user_object.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"message": "Not authenticated"}
+        )
+    
     user_object = db.query(User).filter(User.id == user_id).first()
 
     if user_object is None:
@@ -70,4 +81,3 @@ async def delete_user(user_id: UUID, db: Session=Depends(get_db), user_object: s
     db.delete(user_object)
     db.commit()
     return {"Deleted": True}
-
